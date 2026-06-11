@@ -1,0 +1,18 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Derleme Klasörleri ve Geçici Dosyalar
+build/
+dist/
+*.spec
+*.zip
+
+# IDE Klasörleri
+.vscode/
+.idea/
+
+# macOS / Windows Sistem Dosyaları
+.DS_Store
+Thumbs.db

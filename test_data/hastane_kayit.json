@@ -1,0 +1,47 @@
+[
+  {
+    "hasta_id": "H-1001",
+    "kisisel_bilgiler": {
+      "ad": "Ahmet",
+      "soyad": "Yılmaz",
+      "yas": 45,
+      "kan_grubu": "A+"
+    },
+    "ziyaretler": [
+      {
+        "tarih": "2026-01-15",
+        "doktor": "Dr. Ayşe Kaya",
+        "bolum": "Kardiyoloji",
+        "recete": [
+          {"ilac": "Aspirin", "doz": "100mg", "periyot": "Günde 1"},
+          {"ilac": "Tansiyon Hapı", "doz": "50mg", "periyot": "Günde 2"}
+        ]
+      },
+      {
+        "tarih": "2026-03-10",
+        "doktor": "Dr. Mehmet Öz",
+        "bolum": "Dahiliye",
+        "recete": []
+      }
+    ]
+  },
+  {
+    "hasta_id": "H-1002",
+    "kisisel_bilgiler": {
+      "ad": "Elif",
+      "soyad": "Demir",
+      "yas": 32,
+      "kan_grubu": "O-"
+    },
+    "ziyaretler": [
+      {
+        "tarih": "2026-05-20",
+        "doktor": "Dr. Ali Veli",
+        "bolum": "Ortopedi",
+        "recete": [
+          {"ilac": "Ağrı Kesici", "doz": "500mg", "periyot": "Günde 3"}
+        ]
+      }
+    ]
+  }
+]

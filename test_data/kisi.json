@@ -1,0 +1,32 @@
+{
+  "id": 1,
+  "isim": "Ahmet Yılmaz",
+  "yas": 28,
+  "aktif": true,
+  "adres": {
+    "sehir": "Kocaeli",
+    "ilce": "İzmit",
+    "posta_kodu": "41000"
+  },
+  "iletisim": {
+    "email": "ahmet@example.com",
+    "telefon": "0555-111-2233"
+  },
+  "hobiler": ["kitap okuma", "yüzme", "fotoğrafçılık"],
+  "is_gecmisi": [
+    {
+      "sirket": "TechCorp",
+      "pozisyon": "Junior Developer",
+      "yil_baslangic": 2018,
+      "yil_bitis": 2021,
+      "beceriler": ["Python", "SQL", "Git"]
+    },
+    {
+      "sirket": "DataSoft",
+      "pozisyon": "Senior Developer",
+      "yil_baslangic": 2021,
+      "yil_bitis": null,
+      "beceriler": ["Python", "Kafka", "Docker", "Kubernetes"]
+    }
+  ]
+}

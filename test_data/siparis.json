@@ -1,0 +1,54 @@
+{
+  "siparis_no": "ORD-2024-001",
+  "tarih": "2024-05-15",
+  "durum": "teslim_edildi",
+  "musteri": {
+    "musteri_id": 42,
+    "ad_soyad": "Zeynep Kaya",
+    "uyelik_tipi": "premium",
+    "adres": {
+      "ulke": "Türkiye",
+      "sehir": "İstanbul",
+      "ilce": "Kadıköy",
+      "mahalle": "Moda",
+      "sokak": "Bahariye Cd. No:5"
+    }
+  },
+  "urunler": [
+    {
+      "urun_id": 101,
+      "ad": "Laptop",
+      "miktar": 1,
+      "birim_fiyat": 45000.0,
+      "kategori": {
+        "kategori_id": 5,
+        "ad": "Elektronik",
+        "ust_kategori": "Teknoloji"
+      },
+      "etiketler": ["yeni", "indirimli", "hizli_kargo"]
+    },
+    {
+      "urun_id": 202,
+      "ad": "Laptop Çantası",
+      "miktar": 2,
+      "birim_fiyat": 850.0,
+      "kategori": {
+        "kategori_id": 12,
+        "ad": "Aksesuar",
+        "ust_kategori": "Teknoloji"
+      },
+      "etiketler": ["yeni"]
+    }
+  ],
+  "odeme": {
+    "yontem": "kredi_karti",
+    "toplam": 46700.0,
+    "vergi": 0.18,
+    "taksit_sayisi": 12
+  },
+  "kargo": {
+    "firma": "FastCargo",
+    "takip_no": "FC-987654321",
+    "tahmini_teslim": "2024-05-18"
+  }
+}

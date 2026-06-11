@@ -1,0 +1,62 @@
+{
+  "universite": "Kocaeli Üniversitesi",
+  "kurulis_yili": 1992,
+  "konum": {
+    "sehir": "Kocaeli",
+    "kampus": "Umuttepe",
+    "koordinat": {
+      "enlem": 40.8533,
+      "boylam": 29.9218
+    }
+  },
+  "fakulteler": [
+    {
+      "fakülte_ad": "Mühendislik Fakültesi",
+      "dekan": "Prof. Dr. Ali Veli",
+      "bolumler": [
+        {
+          "bolum_ad": "Bilgisayar Mühendisliği",
+          "kontenjan": 120,
+          "dersler": [
+            {
+              "kod": "BM301",
+              "ad": "Algoritmalar",
+              "kredi": 3,
+              "ogretim_uyesi": {
+                "ad": "Doç. Dr. Mert Can",
+                "unvan": "Doçent",
+                "arastirma_alanlari": ["Yapay Zeka", "Veri Madenciliği"]
+              }
+            },
+            {
+              "kod": "BM302",
+              "ad": "Veritabanı",
+              "kredi": 4,
+              "ogretim_uyesi": {
+                "ad": "Prof. Dr. Selin Ay",
+                "unvan": "Profesör",
+                "arastirma_alanlari": ["NoSQL", "Dağıtık Sistemler", "Cloud"]
+              }
+            }
+          ]
+        },
+        {
+          "bolum_ad": "Elektrik-Elektronik Mühendisliği",
+          "kontenjan": 80,
+          "dersler": [
+            {
+              "kod": "EE201",
+              "ad": "Devre Analizi",
+              "kredi": 3,
+              "ogretim_uyesi": {
+                "ad": "Dr. Öğr. Üyesi Cem Doğan",
+                "unvan": "Dr. Öğr. Üyesi",
+                "arastirma_alanlari": ["Güç Elektroniği"]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "kutuphane_adi": "Merkez Sinema Arşivi",
+  "lokasyon": "İstanbul",
+  "filmler": [
+    {
+      "baslik": "Inception",
+      "yonetmen": "Christopher Nolan",
+      "yil": 2010,
+      "tur": ["Bilim Kurgu", "Aksiyon", "Gerilim"],
+      "oyuncular": [
+        {"isim": "Leonardo DiCaprio", "rol": "Cobb"},
+        {"isim": "Joseph Gordon-Levitt", "rol": "Arthur"},
+        {"isim": "Elliot Page", "rol": "Ariadne"}
+      ],
+      "oduller": {
+        "oscar": 4,
+        "bafta": 3
+      }
+    },
+    {
+      "baslik": "Interstellar",
+      "yonetmen": "Christopher Nolan",
+      "yil": 2014,
+      "tur": ["Bilim Kurgu", "Macera"],
+      "oyuncular": [
+        {"isim": "Matthew McConaughey", "rol": "Cooper"},
+        {"isim": "Anne Hathaway", "rol": "Brand"}
+      ],
+      "oduller": {
+        "oscar": 1,
+        "bafta": 1
+      }
+    }
+  ]
+}
