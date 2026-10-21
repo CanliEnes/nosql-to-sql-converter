@@ -18,7 +18,7 @@ from __future__ import annotations
 from typing import Any, Callable, Optional
 
 from .parser import JSONParser
-from .db_engine import DatabaseEngine
+from .db_engine import DatabaseEngine, quote
 
 
 class ConverterEngine:
@@ -57,8 +57,13 @@ class ConverterEngine:
         fk_col_name = None
         if parent_fk:
             fk_col_name, _ = parent_fk
-            parent_table = fk_col_name.replace("_id", "")
+            parent_table = fk_col_name.removesuffix("_id")
             fk_def = (fk_col_name, parent_table, "id")
+
+        # JSON'daki "id" (ya da FK ile aynı adlı) alan, otomatik üretilen anahtarla
+        # çakışmasın diye "json_" önekiyle ayrı bir sütunda saklanır.
+        reserved = {"id", fk_col_name} if fk_col_name else {"id"}
+        flat.columns = self._rename_reserved(flat.columns, reserved)
 
         if table_name not in self._created_tables:
             sql = self.db.create_table(table_name, flat.columns, foreign_key=fk_def)
@@ -71,8 +76,7 @@ class ConverterEngine:
             self._ensure_columns(table_name, flat.columns, log_fn)
 
         # ── Satır yaz ────────────────────────────────────────────
-        row_data = dict(flat.columns)            # şema için type bilgisi değil, değerleri alalım
-        row_data = self._extract_flat_values(data)
+        row_data = self._rename_reserved(self._extract_flat_values(data), reserved)
 
         if parent_fk:
             fk_col_name, parent_id = parent_fk
@@ -83,7 +87,7 @@ class ConverterEngine:
 
         # ── Alt tablolar (diziler) ────────────────────────────────
         for array_key, items in flat.arrays.items():
-            child_table = f"{table_name}_{array_key}"
+            child_table = f"{table_name}_{self.parser._sanitize(array_key)}"
             child_fk_col = f"{table_name}_id"
             log_fn(f"[ARRAY ] '{array_key}' → alt tablo: {child_table}")
             for item in items:
@@ -96,6 +100,11 @@ class ConverterEngine:
                 )
 
     # ─── Helpers ─────────────────────────────────────────────────
+
+    @staticmethod
+    def _rename_reserved(columns: dict, reserved: set) -> dict:
+        """Ayrılmış sütun adlarını (id, FK) 'json_' önekiyle yeniden adlandırır."""
+        return {(f"json_{k}" if k in reserved else k): v for k, v in columns.items()}
 
     def _extract_flat_values(self, data: dict, prefix: str = "") -> dict:
         """
@@ -126,7 +135,7 @@ class ConverterEngine:
         (Örn: array elemanları heterojen ise)
         """
         existing_cols_query = self.db.conn.execute(
-            f"PRAGMA table_info({table_name})"
+            f"PRAGMA table_info({quote(table_name)})"
         )
         existing = {row[1] for row in existing_cols_query.fetchall()}
 
@@ -134,7 +143,7 @@ class ConverterEngine:
             if col not in existing:
                 try:
                     self.db.conn.execute(
-                        f'ALTER TABLE {table_name} ADD COLUMN "{col}" {sql_type}'
+                        f"ALTER TABLE {quote(table_name)} ADD COLUMN {quote(col)} {sql_type}"
                     )
                     self.db.conn.commit()
                     log_fn(f"[ALTER ] {table_name} + sütun: {col} ({sql_type})")

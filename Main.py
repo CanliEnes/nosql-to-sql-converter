@@ -75,7 +75,7 @@ class App(tk.Tk):
         self.tab_json   = self._make_tab("🌲 JSON Görünümü")
         self.tab_schema = self._make_tab("🗂 SQL Şeması")
         self.tab_data   = self._make_tab("📊 Tablo Verileri")
-        self.tab_visualizer = self._make_tab("📊 ER & İstatistik")
+        self.tab_visualizer = self._make_tab("📐 ER & İstatistik")
         self.tab_log    = self._make_tab("📋 Log")
 
         self._build_json_tab()
@@ -138,9 +138,10 @@ class App(tk.Tk):
         vsb = ttk.Scrollbar(self.data_frame, orient="vertical", command=self.data_tree.yview)
         hsb = ttk.Scrollbar(self.data_frame, orient="horizontal", command=self.data_tree.xview)
         self.data_tree.configure(yscrollcommand=vsb.set, xscrollcommand=hsb.set)
-        self.data_tree.pack(side="left", fill="both", expand=True)
-        vsb.pack(side="left", fill="y")
+        # Yatay çubuk önce yerleşmeli; yoksa tablo bütün alanı kaplar ve çubuk görünmez.
         hsb.pack(side="bottom", fill="x")
+        vsb.pack(side="right", fill="y")
+        self.data_tree.pack(side="left", fill="both", expand=True)
 
     def _build_log_tab(self):
         self.txt_log = scrolledtext.ScrolledText(self.tab_log, bg="#181825", fg="#fab387",
@@ -187,6 +188,9 @@ class App(tk.Tk):
         if self.json_data is None:
             return
         try:
+            # Her dönüşüm boş bir veritabanıyla başlar; aksi hâlde ikinci kez
+            # basıldığında satırlar çoğalır ve önceki dosyanın tabloları kalır.
+            self._new_database()
             self._log("─── Dönüşüm başladı ───")
             root_name = "root"
             schema_lines = []
@@ -227,15 +231,17 @@ class App(tk.Tk):
         for row in rows:
             self.data_tree.insert("", "end", values=[str(v) if v is not None else "NULL" for v in row])
 
-    def reset(self):
+    def _new_database(self):
         self.db_engine.close()
         self.db_engine = DatabaseEngine(":memory:")
         self.converter = ConverterEngine(self.db_engine)
-        
+
         # Görselleştirme modüllerinin db referansını güncelle
         self.er_canvas.db = self.db_engine
         self.stats_canvas.db = self.db_engine
-        
+
+    def reset(self):
+        self._new_database()
         self.json_data = None
         self.tree.delete(*self.tree.get_children())
         self._set_text(self.txt_json, "")

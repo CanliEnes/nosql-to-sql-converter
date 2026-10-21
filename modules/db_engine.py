@@ -12,6 +12,12 @@ import sqlite3
 from typing import Optional
 
 
+def quote(name: str) -> str:
+    """Tablo/sütun adını SQL'de güvenle kullanılacak şekilde tırnak içine alır.
+    (Boşluklu adlar ve 'order', 'group' gibi ayrılmış kelimeler için gerekli.)"""
+    return '"' + str(name).replace('"', '""') + '"'
+
+
 class DatabaseEngine:
     def __init__(self, db_path: str = ":memory:"):
         self.db_path = db_path
@@ -36,21 +42,21 @@ class DatabaseEngine:
         reserved = {"id"}
         if foreign_key:
             fk_col, ref_table, ref_col = foreign_key
-            col_defs.append(f"{fk_col} INTEGER")
+            col_defs.append(f"{quote(fk_col)} INTEGER")
             reserved.add(fk_col)
 
         for col, sql_type in columns.items():
             if col in reserved:
                 continue
-            col_defs.append(f'"{col}" {sql_type}')
+            col_defs.append(f"{quote(col)} {sql_type}")
 
         fk_clause = ""
         if foreign_key:
             fk_col, ref_table, ref_col = foreign_key
-            fk_clause = f",\n  FOREIGN KEY ({fk_col}) REFERENCES {ref_table}({ref_col})"
+            fk_clause = f",\n  FOREIGN KEY ({quote(fk_col)}) REFERENCES {quote(ref_table)}({quote(ref_col)})"
 
         sql = (
-            f"CREATE TABLE IF NOT EXISTS {table_name} (\n"
+            f"CREATE TABLE IF NOT EXISTS {quote(table_name)} (\n"
             f"  {','.join(col_defs)}"
             f"{fk_clause}\n);"
         )
@@ -67,7 +73,7 @@ class DatabaseEngine:
         # FK kısıtı nedeniyle tersten sil
         self.conn.execute("PRAGMA foreign_keys = OFF")
         for t in reversed(tables):
-            self.conn.execute(f"DROP TABLE IF EXISTS {t}")
+            self.conn.execute(f"DROP TABLE IF EXISTS {quote(t)}")
         self.conn.execute("PRAGMA foreign_keys = ON")
         self.conn.commit()
 
@@ -80,13 +86,13 @@ class DatabaseEngine:
         """
         if not data:
             # Sadece id sütunu olan tablo (nadiren)
-            cursor = self.conn.execute(f"INSERT INTO {table_name} DEFAULT VALUES")
+            cursor = self.conn.execute(f"INSERT INTO {quote(table_name)} DEFAULT VALUES")
             self.conn.commit()
             return cursor.lastrowid
 
-        cols = ", ".join(f'"{k}"' for k in data)
+        cols = ", ".join(quote(k) for k in data)
         placeholders = ", ".join("?" for _ in data)
-        sql = f"INSERT INTO {table_name} ({cols}) VALUES ({placeholders})"
+        sql = f"INSERT INTO {quote(table_name)} ({cols}) VALUES ({placeholders})"
         cursor = self.conn.execute(sql, list(data.values()))
         self.conn.commit()
         return cursor.lastrowid
@@ -101,7 +107,7 @@ class DatabaseEngine:
 
     def fetch_table(self, table_name: str) -> tuple[list, list]:
         """(column_names, rows) döndürür."""
-        cursor = self.conn.execute(f"SELECT * FROM {table_name}")
+        cursor = self.conn.execute(f"SELECT * FROM {quote(table_name)}")
         cols = [desc[0] for desc in cursor.description]
         rows = cursor.fetchall()
         return cols, rows
@@ -118,7 +124,7 @@ class DatabaseEngine:
         Tablonun yabancı anahtar (Foreign Key) ilişkilerini döner.
         [{'from': local_col, 'to_table': foreign_table, 'to': foreign_col}]
         """
-        cursor = self.conn.execute(f"PRAGMA foreign_key_list({table_name})")
+        cursor = self.conn.execute(f"PRAGMA foreign_key_list({quote(table_name)})")
         relations = []
         for row in cursor.fetchall():
             # row: (id, seq, table, from, to, on_update, on_delete, match)
@@ -131,7 +137,7 @@ class DatabaseEngine:
 
     def get_table_row_count(self, table_name: str) -> int:
         """Tablodaki toplam satır sayısını döner."""
-        cursor = self.conn.execute(f"SELECT COUNT(*) FROM {table_name}")
+        cursor = self.conn.execute(f"SELECT COUNT(*) FROM {quote(table_name)}")
         return cursor.fetchone()[0]
 
     def close(self):
