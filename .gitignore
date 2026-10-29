@@ -16,3 +16,6 @@ dist/
 # macOS / Windows Sistem Dosyaları
 .DS_Store
 Thumbs.db
+
+# Projeyle ilgisi olmayan yerel dosyalar
+test_data/*.png
